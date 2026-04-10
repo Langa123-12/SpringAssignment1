@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Computer Science Course Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: clamp(0.875rem, 4vw, 1.1rem);
+        }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            color: #4a5568;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .card .count {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .card.foundation .count { color: #48bb78; }
+        .card.undergraduate .count { color: #4299e1; }
+        .card.honours .count { color: #ed8936; }
+
+        /* Main Content Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+        }
+
+        /* Form Section */
+        .form-section {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .form-section h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 12px;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .required {
+            color: #e53e3e;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            width: 100%;
+            font-weight: 600;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .cancel-btn {
+            background: linear-gradient(135deg, #fc8181 0%, #e53e3e 100%);
+            margin-top: 10px;
+        }
+
+        /* Courses List Section */
+        .courses-section {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .courses-section h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 12px;
+            font-size: 1.3rem;
+        }
+
+        .course-item {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.2s;
+        }
+
+        .course-item:hover {
+            background: #edf2f7;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .course-code {
+            background: #e2e8f0;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #2d3748;
+            font-family: 'Courier New', monospace;
+        }
+
+        .course-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            flex: 1;
+        }
+
+        .course-type {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .type-Foundation { background: #c6f6d5; color: #22543d; }
+        .type-Undergraduate { background: #bee3f8; color: #2c5282; }
+        .type-Honours { background: #fed7d7; color: #742a2a; }
+
+        .course-details {
+            color: #718096;
+            font-size: 0.85rem;
+            margin: 10px 0;
+        }
+
+        .course-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            width: auto;
+            font-weight: 500;
+        }
+
+        .edit-btn {
+            background: #4299e1;
+        }
+
+        .delete-btn {
+            background: #f56565;
+        }
+
+        /* Messages */
+        .error-message {
+            background: #fed7d7;
+            color: #742a2a;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            color: #22543d;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #718096;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #718096;
+            font-size: 0.95rem;
+        }
+
+        small {
+            display: block;
+            margin-top: 5px;
+            color: #a0aec0;
+            font-size: 0.75rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            body {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .summary-cards {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .card .count {
+                font-size: 2.5rem;
+            }
+
+            .course-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .course-actions {
+                width: 100%;
+            }
+
+            .edit-btn, .delete-btn {
+                flex: 1;
+                text-align: center;
+            }
+
+            .form-section, .courses-section {
+                padding: 20px;
+            }
+
+            button {
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .header p {
+                font-size: 0.8rem;
+            }
+
+            .form-section h2, .courses-section h2 {
+                font-size: 1.1rem;
+            }
+
+            input, select {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            button, .course-actions {
+                display: none;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1>Computer Science Course Management System</h1>
+        <p>Department of Computer Science | Spring Boot REST API</p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+        <div class="card foundation">
+            <h3>Foundation Courses</h3>
+            <div class="count" id="foundationCount">0</div>
+        </div>
+        <div class="card undergraduate">
+            <h3>Undergraduate Courses</h3>
+            <div class="count" id="undergraduateCount">0</div>
+        </div>
+        <div class="card honours">
+            <h3>Honours Courses</h3>
+            <div class="count" id="honoursCount">0</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2 id="formTitle">Add New Course</h2>
+            <form id="courseForm">
+                <input type="hidden" id="courseId">
+
+                <div class="form-group">
+                    <label>Course Code <span class="required">*</span></label>
+                    <input type="text" id="courseCode" required placeholder="e.g., CSC101">
+                    <small>Enter a unique course code</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Course Name <span class="required">*</span></label>
+                    <input type="text" id="name" required placeholder="e.g., Introduction to Programming">
+                </div>
+
+                <div class="form-group">
+                    <label>Course Type <span class="required">*</span></label>
+                    <select id="type" required>
+                        <option value="">Select Course Type</option>
+                        <option value="Foundation">Foundation - Year 1</option>
+                        <option value="Undergraduate">Undergraduate - Years 2-3</option>
+                        <option value="Honours">Honours - Year 4</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Credits <span class="required">*</span></label>
+                    <input type="number" id="credits" min="1" max="6" required>
+                    <small>Credits must be between 1 and 6</small>
+                </div>
+
+                <button type="submit" id="submitBtn">Add Course</button>
+                <button type="button" id="cancelBtn" class="cancel-btn" style="display:none;">Cancel Edit</button>
+            </form>
+            <div id="errorMsg" class="error-message"></div>
+            <div id="successMsg" class="success-message"></div>
+        </div>
+
+        <!-- Courses List Section -->
+        <div class="courses-section">
+            <h2>All Courses</h2>
+            <div id="coursesList">
+                <div class="loading">Loading courses...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_URL = 'http://localhost:8080/api/courses';
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadCourses();
+        loadSummary();
+        document.getElementById('courseForm').addEventListener('submit', saveCourse);
+        document.getElementById('cancelBtn').addEventListener('click', resetForm);
+
+        // Auto-fill credits based on course type
+        document.getElementById('type').addEventListener('change', function() {
+            const creditsField = document.getElementById('credits');
+            if (this.value === 'Foundation') {
+                creditsField.value = 4;
+            } else if (this.value === 'Undergraduate') {
+                creditsField.value = 3;
+            } else if (this.value === 'Honours') {
+                creditsField.value = 4;
+            }
+        });
+    });
+
+    // Load all courses
+    async function loadCourses() {
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) throw new Error('Failed to load courses');
+            const courses = await response.json();
+            displayCourses(courses);
+        } catch (error) {
+            document.getElementById('coursesList').innerHTML =
+                '<div class="error-message" style="display:block; text-align:center;">Connection Error: Make sure Spring Boot is running on port 8080</div>';
+        }
+    }
+
+    // Load summary statistics
+    async function loadSummary() {
+        try {
+            const response = await fetch(API_URL + '/summary');
+            if (!response.ok) throw new Error('Failed to load summary');
+            const summary = await response.json();
+            document.getElementById('foundationCount').innerHTML = summary['Foundation courses offered in the Computer Science Department'] || 0;
+            document.getElementById('undergraduateCount').innerHTML = summary['Undergraduate courses offered in the Computer Science Department'] || 0;
+            document.getElementById('honoursCount').innerHTML = summary['Honours courses offered in the Computer Science Department'] || 0;
+        } catch (error) {
+            console.error('Error loading summary:', error);
+        }
+    }
+
+    // Display courses in the UI
+    function displayCourses(courses) {
+        const container = document.getElementById('coursesList');
+
+        if (!courses || courses.length === 0) {
+            container.innerHTML = '<div class="empty-state">No courses available. Add your first course using the form.</div>';
+            return;
+        }
+
+        let html = '';
+        for (let i = 0; i < courses.length; i++) {
+            const course = courses[i];
+            html += `
+                    <div class="course-item">
+                        <div class="course-header">
+                            <span class="course-code">${escapeHtml(course.courseCode || 'N/A')}</span>
+                            <span class="course-title">${escapeHtml(course.name)}</span>
+                            <span class="course-type type-${course.type}">${course.type}</span>
+                        </div>
+                        <div class="course-details">
+                            Credits: ${course.credits}
+                        </div>
+                        <div class="course-actions">
+                            <button class="edit-btn" onclick="editCourse(${course.id})">Edit</button>
+                            <button class="delete-btn" onclick="deleteCourse(${course.id})">Delete</button>
+                        </div>
+                    </div>
+                `;
+        }
+        container.innerHTML = html;
+    }
+
+    // Save course (create or update)
+    async function saveCourse(event) {
+        event.preventDefault();
+        hideMessages();
+
+        const id = document.getElementById('courseId').value;
+        const courseData = {
+            courseCode: document.getElementById('courseCode').value.trim(),
+            name: document.getElementById('name').value.trim(),
+            type: document.getElementById('type').value,
+            credits: parseInt(document.getElementById('credits').value)
+        };
+
+        // Validation
+        if (!courseData.courseCode) {
+            showError('Course code is required');
+            return;
+        }
+        if (!courseData.name) {
+            showError('Course name is required');
+            return;
+        }
+        if (!courseData.type) {
+            showError('Please select a course type');
+            return;
+        }
+        if (courseData.credits < 1 || courseData.credits > 6) {
+            showError('Credits must be between 1 and 6');
+            return;
+        }
+
+        try {
+            let response;
+            if (id) {
+                response = await fetch(API_URL + '/' + id, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(courseData)
+                });
+            } else {
+                response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(courseData)
+                });
+            }
+
+            if (!response.ok) {
+                const error = await response.json();
+                const errorMessage = Object.values(error).join(', ');
+                throw new Error(errorMessage || 'Failed to save course');
+            }
+
+            showSuccess(id ? 'Course updated successfully' : 'Course added successfully');
+            resetForm();
+            loadCourses();
+            loadSummary();
+        } catch (error) {
+            showError(error.message);
+        }
+    }
+
+    // Edit course
+    async function editCourse(id) {
+        try {
+            const response = await fetch(API_URL + '/' + id);
+            if (!response.ok) throw new Error('Failed to load course');
+            const course = await response.json();
+
+            document.getElementById('courseId').value = course.id;
+            document.getElementById('courseCode').value = course.courseCode || '';
+            document.getElementById('name').value = course.name;
+            document.getElementById('type').value = course.type;
+            document.getElementById('credits').value = course.credits;
+
+            document.getElementById('formTitle').innerHTML = 'Edit Course';
+            document.getElementById('submitBtn').innerHTML = 'Update Course';
+            document.getElementById('cancelBtn').style.display = 'block';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (error) {
+            showError('Failed to load course for editing');
+        }
+    }
+
+    // Delete course
+    async function deleteCourse(id) {
+        if (!confirm('Are you sure you want to delete this course?')) return;
+
+        try {
+            const response = await fetch(API_URL + '/' + id, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) throw new Error('Failed to delete course');
+
+            showSuccess('Course deleted successfully');
+            loadCourses();
+            loadSummary();
+
+            if (document.getElementById('courseId').value == id) {
+                resetForm();
+            }
+        } catch (error) {
+            showError(error.message);
+        }
+    }
+
+    // Reset form
+    function resetForm() {
+        document.getElementById('courseForm').reset();
+        document.getElementById('courseId').value = '';
+        document.getElementById('formTitle').innerHTML = 'Add New Course';
+        document.getElementById('submitBtn').innerHTML = 'Add Course';
+        document.getElementById('cancelBtn').style.display = 'none';
+        hideMessages();
+    }
+
+    // Show error message
+    function showError(message) {
+        const errorDiv = document.getElementById('errorMsg');
+        errorDiv.innerHTML = message;
+        errorDiv.style.display = 'block';
+        setTimeout(function() {
+            errorDiv.style.display = 'none';
+        }, 5000);
+    }
+
+    // Show success message
+    function showSuccess(message) {
+        const successDiv = document.getElementById('successMsg');
+        successDiv.innerHTML = message;
+        successDiv.style.display = 'block';
+        setTimeout(function() {
+            successDiv.style.display = 'none';
+        }, 3000);
+    }
+
+    // Hide all messages
+    function hideMessages() {
+        document.getElementById('errorMsg').style.display = 'none';
+        document.getElementById('successMsg').style.display = 'none';
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+        if (!text) return '';
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+</script>
+</body>
+</html>
