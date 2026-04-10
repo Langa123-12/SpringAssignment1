@@ -1,0 +1,179 @@
+### ============================================
+### COMPUTER SCIENCE COURSE API TESTS
+### ============================================
+
+### 1. CREATE COURSE 1 (Foundation - Programming)
+POST http://localhost:8080/api/courses
+Content-Type: application/json
+
+{
+  "courseCode": "CSC101",
+  "name": "Introduction to Programming",
+  "type": "Foundation",
+  "credits": 4
+}
+
+###
+
+### 2. CREATE COURSE 2 (Foundation - Mathematics)
+POST http://localhost:8080/api/courses
+Content-Type: application/json
+
+{
+  "courseCode": "CSC103",
+  "name": "Discrete Mathematics",
+  "type": "Foundation",
+  "credits": 4
+}
+
+###
+
+### 3. CREATE COURSE 3 (Undergraduate - DSA)
+POST http://localhost:8080/api/courses
+Content-Type: application/json
+
+{
+  "courseCode": "CSC201",
+  "name": "Data Structures and Algorithms",
+  "type": "Undergraduate",
+  "credits": 3
+}
+
+###
+
+### 4. CREATE COURSE 4 (Undergraduate - Databases)
+POST http://localhost:8080/api/courses
+Content-Type: application/json
+
+{
+  "courseCode": "CSC202",
+  "name": "Database Management Systems",
+  "type": "Undergraduate",
+  "credits": 3
+}
+
+###
+
+### 5. CREATE COURSE 5 (Undergraduate - Networks)
+POST http://localhost:8080/api/courses
+Content-Type: application/json
+
+{
+  "courseCode": "CSC204",
+  "name": "Computer Networks",
+  "type": "Undergraduate",
+  "credits": 3
+}
+
+###
+
+### 6. CREATE COURSE 6 (Honours - ML)
+POST http://localhost:8080/api/courses
+Content-Type: application/json
+
+{
+  "courseCode": "CSC301",
+  "name": "Machine Learning",
+  "type": "Honours",
+  "credits": 4
+}
+
+###
+
+### 7. CREATE COURSE 7 (Honours - AI)
+POST http://localhost:8080/api/courses
+Content-Type: application/json
+
+{
+  "courseCode": "CSC302",
+  "name": "Artificial Intelligence",
+  "type": "Honours",
+  "credits": 4
+}
+
+###
+
+### 8. GET ALL COURSES
+GET http://localhost:8080/api/courses
+
+###
+
+### 9. GET COURSE SUMMARY (PART A)
+GET http://localhost:8080/api/courses/summary
+
+###
+
+### 10. GET SINGLE COURSE (ID = 1)
+GET http://localhost:8080/api/courses/1
+
+###
+
+### 11. UPDATE COURSE (ID = 1)
+PUT http://localhost:8080/api/courses/1
+Content-Type: application/json
+
+{
+  "courseCode": "CSC101",
+  "name": "Advanced Introduction to Programming",
+  "type": "Foundation",
+  "credits": 4
+}
+
+###
+
+### 12. DELETE COURSE (ID = 2)
+DELETE http://localhost:8080/api/courses/2
+
+###
+
+### 13. VERIFY DELETE (Get all courses again)
+GET http://localhost:8080/api/courses
+
+###
+
+### 14. TEST VALIDATION - Invalid Course Code Format
+POST http://localhost:8080/api/courses
+Content-Type: application/json
+
+{
+  "courseCode": "CSC99",
+  "name": "Test Course",
+  "type": "Foundation",
+  "credits": 4
+}
+
+###
+
+### 15. TEST VALIDATION - Invalid Type
+POST http://localhost:8080/api/courses
+Content-Type: application/json
+
+{
+  "courseCode": "CSC999",
+  "name": "Test Course",
+  "type": "Master",
+  "credits": 4
+}
+
+###
+
+### 16. TEST VALIDATION - Credits Too High
+POST http://localhost:8080/api/courses
+Content-Type: application/json
+
+{
+  "courseCode": "CSC509",
+  "name": "Test Course",
+  "type": "Undergraduate",
+  "credits": 10
+}
+
+###
+
+### 17. TEST VALIDATION - Missing Required Fields
+POST http://localhost:8080/api/courses
+Content-Type: application/json
+
+{
+  "instructor": "Dr. Test"
+}
